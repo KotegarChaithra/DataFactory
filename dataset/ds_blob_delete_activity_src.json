@@ -1,0 +1,18 @@
+{
+	"name": "ds_blob_delete_activity_src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "emp_1.csv",
+				"container": "input-data"
+			}
+		}
+	}
+}
