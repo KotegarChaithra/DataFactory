@@ -19,6 +19,13 @@
 						"referenceName": "ds_blob_delete_activity_src",
 						"type": "DatasetReference"
 					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "LS_AzureBlobStorage1",
+							"type": "LinkedServiceReference"
+						},
+						"path": "input-data"
+					},
 					"enableLogging": true,
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
