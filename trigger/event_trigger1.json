@@ -1,0 +1,23 @@
+{
+	"name": "event_trigger1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline_copy_data_event_trigger",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/49ed02b0-f73b-41f1-85f2-5513631de887/resourceGroups/chaithra-resource-group-1/providers/Microsoft.Storage/storageAccounts/storageaccountchaithra01",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
