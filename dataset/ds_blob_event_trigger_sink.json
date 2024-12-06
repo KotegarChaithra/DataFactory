@@ -1,0 +1,22 @@
+{
+	"name": "ds_blob_event_trigger_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureBlobStorageOutput2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "output-json"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
