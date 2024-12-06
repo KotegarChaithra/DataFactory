@@ -11,13 +11,29 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"LS_AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage1'"
+		},
 		"LS_AzureBlobStorageOutput2_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorageOutput2'"
 		},
-		"LS_AzureBlobStorage1_connectionString": {
+		"LS_AzureSqlDatabase_Output_password": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage1'"
+			"metadata": "Secure string for 'password' of 'LS_AzureSqlDatabase_Output'"
+		},
+		"LS_AzureSqlDatabase_Output_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "chaithraserver.database.windows.net"
+		},
+		"LS_AzureSqlDatabase_Output_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "chaithradatabase"
+		},
+		"LS_AzureSqlDatabase_Output_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "chaithra"
 		},
 		"containerUri": {
 			"type": "string",
@@ -49,11 +65,23 @@
 					"AzureBlobStorage1_connectionString": {
 						"value": "[parameters('AzureBlobStorage1_connectionString')]"
 					},
+					"LS_AzureBlobStorage1_connectionString": {
+						"value": "[parameters('LS_AzureBlobStorage1_connectionString')]"
+					},
 					"LS_AzureBlobStorageOutput2_connectionString": {
 						"value": "[parameters('LS_AzureBlobStorageOutput2_connectionString')]"
 					},
-					"LS_AzureBlobStorage1_connectionString": {
-						"value": "[parameters('LS_AzureBlobStorage1_connectionString')]"
+					"LS_AzureSqlDatabase_Output_password": {
+						"value": "[parameters('LS_AzureSqlDatabase_Output_password')]"
+					},
+					"LS_AzureSqlDatabase_Output_properties_typeProperties_server": {
+						"value": "[parameters('LS_AzureSqlDatabase_Output_properties_typeProperties_server')]"
+					},
+					"LS_AzureSqlDatabase_Output_properties_typeProperties_database": {
+						"value": "[parameters('LS_AzureSqlDatabase_Output_properties_typeProperties_database')]"
+					},
+					"LS_AzureSqlDatabase_Output_properties_typeProperties_userName": {
+						"value": "[parameters('LS_AzureSqlDatabase_Output_properties_typeProperties_userName')]"
 					}
 				}
 			},

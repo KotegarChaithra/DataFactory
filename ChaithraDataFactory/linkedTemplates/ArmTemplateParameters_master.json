@@ -8,11 +8,23 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"LS_AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
 		"LS_AzureBlobStorageOutput2_connectionString": {
 			"value": ""
 		},
-		"LS_AzureBlobStorage1_connectionString": {
+		"LS_AzureSqlDatabase_Output_password": {
 			"value": ""
+		},
+		"LS_AzureSqlDatabase_Output_properties_typeProperties_server": {
+			"value": "chaithraserver.database.windows.net"
+		},
+		"LS_AzureSqlDatabase_Output_properties_typeProperties_database": {
+			"value": "chaithradatabase"
+		},
+		"LS_AzureSqlDatabase_Output_properties_typeProperties_userName": {
+			"value": "chaithra"
 		},
 		"containerUri": {
 			"value": ""
