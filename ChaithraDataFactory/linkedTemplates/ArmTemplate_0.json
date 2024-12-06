@@ -631,38 +631,6 @@
 				"[concat(variables('factoryId'), '/datasets/ds_blob_blob_file_arriving_event_trigger_src')]",
 				"[concat(variables('factoryId'), '/datasets/ds_blob_event_trigger_sink')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_sql_trigger1')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "This is the copy data activity , this copy data from azure blob to Azure SQL data base. I want to run this every  2 minutes whole day as of today Dec 6th, 2024. I am using scheduled trigger.",
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "pipeline_copy_data_from_blob_to_azure_sql",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 2,
-						"startTime": "2024-12-06T09:43:00",
-						"endTime": "2024-12-07T09:43:00",
-						"timeZone": "India Standard Time"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/pipeline_copy_data_from_blob_to_azure_sql')]"
-			]
 		}
 	]
 }
