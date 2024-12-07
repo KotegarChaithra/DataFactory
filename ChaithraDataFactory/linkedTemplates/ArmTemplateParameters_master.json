@@ -17,6 +17,9 @@
 		"LS_AzureSqlDatabase_Output_password": {
 			"value": ""
 		},
+		"LS_AzureSqlDatabase_input_password": {
+			"value": ""
+		},
 		"LS_AzureSqlDatabase_Output_properties_typeProperties_server": {
 			"value": "chaithraserver.database.windows.net"
 		},
@@ -25,6 +28,21 @@
 		},
 		"LS_AzureSqlDatabase_Output_properties_typeProperties_userName": {
 			"value": "chaithra"
+		},
+		"LS_AzureSqlDatabase_input_properties_typeProperties_server": {
+			"value": "chaithraserver.database.windows.net"
+		},
+		"LS_AzureSqlDatabase_input_properties_typeProperties_database": {
+			"value": "chaithradatabase"
+		},
+		"LS_AzureSqlDatabase_input_properties_typeProperties_userName": {
+			"value": "chaithra"
+		},
+		"tumbling_window_properties_pipeline_parameters_penddate": {
+			"value": "@trigger().output.windowendtime"
+		},
+		"tumbling_window_properties_pipeline_parameters_pstartdate": {
+			"value": "@trigger().windowstarttime"
 		},
 		"containerUri": {
 			"value": ""
