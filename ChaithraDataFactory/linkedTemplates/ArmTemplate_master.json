@@ -144,18 +144,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"tumbling_window_properties_pipeline_parameters_penddate": {
-						"value": "[parameters('tumbling_window_properties_pipeline_parameters_penddate')]"
-					},
-					"tumbling_window_properties_pipeline_parameters_pstartdate": {
-						"value": "[parameters('tumbling_window_properties_pipeline_parameters_pstartdate')]"
-					},
-					"tumbling_window_trigger_properties_pipeline_parameters_penddate": {
-						"value": "[parameters('tumbling_window_trigger_properties_pipeline_parameters_penddate')]"
-					},
-					"tumbling_window_trigger_properties_pipeline_parameters_pstartdate": {
-						"value": "[parameters('tumbling_window_trigger_properties_pipeline_parameters_pstartdate')]"
 					}
 				}
 			},
@@ -176,6 +164,18 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"tumbling_window_properties_pipeline_parameters_penddate": {
+						"value": "[parameters('tumbling_window_properties_pipeline_parameters_penddate')]"
+					},
+					"tumbling_window_properties_pipeline_parameters_pstartdate": {
+						"value": "[parameters('tumbling_window_properties_pipeline_parameters_pstartdate')]"
+					},
+					"tumbling_window_trigger_properties_pipeline_parameters_penddate": {
+						"value": "[parameters('tumbling_window_trigger_properties_pipeline_parameters_penddate')]"
+					},
+					"tumbling_window_trigger_properties_pipeline_parameters_pstartdate": {
+						"value": "[parameters('tumbling_window_trigger_properties_pipeline_parameters_pstartdate')]"
 					}
 				}
 			},

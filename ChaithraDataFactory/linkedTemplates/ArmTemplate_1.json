@@ -6,22 +6,6 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "ChaithraDataFactory"
-		},
-		"tumbling_window_properties_pipeline_parameters_penddate": {
-			"type": "string",
-			"defaultValue": "@trigger().output.windowendtime"
-		},
-		"tumbling_window_properties_pipeline_parameters_pstartdate": {
-			"type": "string",
-			"defaultValue": "@trigger().windowstarttime"
-		},
-		"tumbling_window_trigger_properties_pipeline_parameters_penddate": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowEndtime"
-		},
-		"tumbling_window_trigger_properties_pipeline_parameters_pstartdate": {
-			"type": "string",
-			"defaultValue": "@trigger().outputs.windowstarttime"
 		}
 	},
 	"variables": {
@@ -252,6 +236,82 @@
 						"type": "String"
 					}
 				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_aggregate_transformation_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "emp_1.csv",
+						"container": "input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "emp_id",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "salary",
+						"type": "String"
+					},
+					{
+						"name": "address",
+						"type": "String"
+					},
+					{
+						"name": "loc",
+						"type": "String"
+					},
+					{
+						"name": "email",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_blob_aggregate_transformation_sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureBlobStorageOutput2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "output"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
 			},
 			"dependsOn": []
 		},
@@ -1035,6 +1095,64 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_aggregate_transformation')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_aggregate_transformation_src",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_blob_aggregate_transformation_sink",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          emp_id as string,",
+						"          name as string,",
+						"          salary as integer,",
+						"          address as string,",
+						"          loc as string,",
+						"          email as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 aggregate(groupBy(address),",
+						"     emp_id = countDistinct(emp_id),",
+						"          tot_salary = sum(salary),",
+						"          max_salary = max(salary)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_aggregate_transformation_src')]",
+				"[concat(variables('factoryId'), '/datasets/ds_blob_aggregate_transformation_sink')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pipeline_dataflow')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1125,123 +1243,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/dataflow_join_transformation')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/tumbling_window')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "pipeline_tumbling_window_trigger",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"penddate": "[parameters('tumbling_window_properties_pipeline_parameters_penddate')]",
-						"pstartdate": "[parameters('tumbling_window_properties_pipeline_parameters_pstartdate')]"
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Hour",
-					"interval": 24,
-					"startTime": "2024-03-01T12:00:00Z",
-					"endTime": "2024-03-06T08:18:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/pipeline_tumbling_window_trigger')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/tumbling_window_trigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "pipeline_tumbling_window_trigger",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"penddate": "[parameters('tumbling_window_trigger_properties_pipeline_parameters_penddate')]",
-						"pstartdate": "[parameters('tumbling_window_trigger_properties_pipeline_parameters_pstartdate')]"
-					}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Hour",
-					"interval": 24,
-					"startTime": "2024-03-01T11:00:00Z",
-					"endTime": "2024-03-06T08:30:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/pipeline_tumbling_window_trigger')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline_union_transformation')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "dataflow_union_transformation",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "dataflow_union_transformation",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"mumbai": {},
-									"delhi": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/dataflow_union_transformation')]"
 			]
 		}
 	]
