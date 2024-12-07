@@ -12,10 +12,21 @@
 					"name": "dataflow"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_blob_dataflow_sink",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "filter1"
+				},
+				{
+					"name": "sort1"
 				}
 			],
 			"scriptLines": [
@@ -40,7 +51,13 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> dataflow",
-				"dataflow filter(ERROR_FUNCTION('Title=__SINGLE_QUOTE__Mr.__SINGLE_QUOTE__')) ~> filter1"
+				"dataflow filter(Title=='Mr.') ~> filter1",
+				"filter1 sort(asc(FirstName, true),",
+				"     caseInsensitive: true) ~> sort1",
+				"sort1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
