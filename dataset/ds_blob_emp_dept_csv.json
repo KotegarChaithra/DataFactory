@@ -1,0 +1,22 @@
+{
+	"name": "ds_blob_emp_dept_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureBlobStorageOutput2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "emp-dept"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
