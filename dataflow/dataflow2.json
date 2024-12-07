@@ -12,7 +12,15 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_blob_aggregate_transformation_sink",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "aggregate1"
@@ -33,7 +41,11 @@
 				"source1 aggregate(groupBy(address),",
 				"     emp_id = countDistinct(emp_id),",
 				"          tot_salary = sum(salary),",
-				"          max_salary = max(salary)) ~> aggregate1"
+				"          max_salary = max(salary)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
