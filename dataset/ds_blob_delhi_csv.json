@@ -1,0 +1,40 @@
+{
+	"name": "ds_blob_delhi_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureBlobStorageOutput2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "delhi_csv.csv",
+				"container": "delhi"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "month ",
+				"type": "String"
+			},
+			{
+				"name": "sales",
+				"type": "String"
+			},
+			{
+				"name": "profit",
+				"type": "String"
+			},
+			{
+				"name": "location",
+				"type": "String"
+			}
+		]
+	}
+}

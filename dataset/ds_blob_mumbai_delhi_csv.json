@@ -1,0 +1,22 @@
+{
+	"name": "ds_blob_mumbai_delhi_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureBlobStorageOutput2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "mumbai-delhi"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

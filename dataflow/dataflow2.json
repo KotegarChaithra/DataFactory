@@ -1,0 +1,63 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_blob_mumbai_csv",
+						"type": "DatasetReference"
+					},
+					"name": "mumbai"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_blob_delhi_csv",
+						"type": "DatasetReference"
+					},
+					"name": "delhi"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_blob_mumbai_delhi_csv",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "union1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {month } as string,",
+				"          sales as string,",
+				"          profit as string,",
+				"          location as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> mumbai",
+				"source(output(",
+				"          {month } as string,",
+				"          sales as string,",
+				"          profit as string,",
+				"          location as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> delhi",
+				"mumbai, delhi union(byName: true)~> union1",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
