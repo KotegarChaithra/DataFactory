@@ -51,13 +51,13 @@
 			"type": "string",
 			"defaultValue": "chaithra"
 		},
-		"tumbling_window_properties_pipeline_parameters_penddate": {
+		"tumbling_window_trigger_properties_pipeline_parameters_penddate": {
 			"type": "string",
-			"defaultValue": "@trigger().output.windowendtime"
+			"defaultValue": "@trigger().outputs.windowEndtime"
 		},
-		"tumbling_window_properties_pipeline_parameters_pstartdate": {
+		"tumbling_window_trigger_properties_pipeline_parameters_pstartdate": {
 			"type": "string",
-			"defaultValue": "@trigger().windowstarttime"
+			"defaultValue": "@trigger().outputs.windowstarttime"
 		}
 	},
 	"variables": {
@@ -673,7 +673,12 @@
 							"secureOutput": false,
 							"secureInput": false
 						},
-						"userProperties": [],
+						"userProperties": [
+							{
+								"name": "Destination",
+								"value": "output//"
+							}
+						],
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
@@ -845,7 +850,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/tumbling_window')]",
+			"name": "[concat(parameters('factoryName'), '/tumbling_window_trigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -857,16 +862,16 @@
 						"type": "PipelineReference"
 					},
 					"parameters": {
-						"penddate": "[parameters('tumbling_window_properties_pipeline_parameters_penddate')]",
-						"pstartdate": "[parameters('tumbling_window_properties_pipeline_parameters_pstartdate')]"
+						"penddate": "[parameters('tumbling_window_trigger_properties_pipeline_parameters_penddate')]",
+						"pstartdate": "[parameters('tumbling_window_trigger_properties_pipeline_parameters_pstartdate')]"
 					}
 				},
 				"type": "TumblingWindowTrigger",
 				"typeProperties": {
 					"frequency": "Hour",
 					"interval": 24,
-					"startTime": "2024-03-01T12:00:00Z",
-					"endTime": "2024-03-06T08:18:00Z",
+					"startTime": "2024-03-01T11:00:00Z",
+					"endTime": "2024-03-06T08:30:00Z",
 					"delay": "00:00:00",
 					"maxConcurrency": 50,
 					"retryPolicy": {
