@@ -20,6 +20,12 @@
 		"LS_AzureSqlDatabase_input_password": {
 			"value": ""
 		},
+		"LS_AzureSQLDatabase_parameterization_pipeline_password": {
+			"value": ""
+		},
+		"LS_AzureBlobStorage_parameterization_connectionString": {
+			"value": ""
+		},
 		"LS_AzureSqlDatabase_Output_properties_typeProperties_server": {
 			"value": "chaithraserver.database.windows.net"
 		},
@@ -49,6 +55,24 @@
 		},
 		"tumbling_window_trigger_properties_pipeline_parameters_pstartdate": {
 			"value": "@trigger().outputs.windowstarttime"
+		},
+		"LS_SQL_databases_parameterization_properties_typeProperties_server": {
+			"value": "chaithraserver.database.windows.net"
+		},
+		"LS_SQL_databases_parameterization_properties_typeProperties_database": {
+			"value": "@{linkedService().db_name}"
+		},
+		"LS_SQL_databases_parameterization_properties_typeProperties_userName": {
+			"value": "chaithra"
+		},
+		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
+			"value": "chaithraserver.database.windows.net"
+		},
+		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database": {
+			"value": "chaithradatabase"
+		},
+		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName": {
+			"value": "chaithra"
 		}
 	}
 }
