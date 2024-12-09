@@ -1,0 +1,22 @@
+{
+	"name": "ds_blob_file_naming_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureBlobStorageOutput2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@convertTimeZone(utcNow(),'UTC','Indian Standard Time')",
+					"type": "Expression"
+				},
+				"container": "output"
+			}
+		},
+		"schema": {}
+	}
+}
