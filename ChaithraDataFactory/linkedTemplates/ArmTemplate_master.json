@@ -19,6 +19,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorageOutput2'"
 		},
+		"LS_AzureBlobStorage_parameterization_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage_parameterization'"
+		},
+		"LS_AzureSQLDatabase_parameterization_pipeline_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_AzureSQLDatabase_parameterization_pipeline'"
+		},
 		"LS_AzureSqlDatabase_Output_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_AzureSqlDatabase_Output'"
@@ -27,13 +35,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_AzureSqlDatabase_input'"
 		},
-		"LS_AzureSQLDatabase_parameterization_pipeline_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'LS_AzureSQLDatabase_parameterization_pipeline'"
+		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "chaithraserver.database.windows.net"
 		},
-		"LS_AzureBlobStorage_parameterization_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage_parameterization'"
+		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "chaithradatabase"
+		},
+		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "chaithra"
 		},
 		"LS_AzureSqlDatabase_Output_properties_typeProperties_server": {
 			"type": "string",
@@ -59,6 +71,18 @@
 			"type": "string",
 			"defaultValue": "chaithra"
 		},
+		"LS_SQL_databases_parameterization_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "chaithraserver.database.windows.net"
+		},
+		"LS_SQL_databases_parameterization_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "@{linkedService().db_name}"
+		},
+		"LS_SQL_databases_parameterization_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "chaithra"
+		},
 		"tumbling_window_properties_pipeline_parameters_penddate": {
 			"type": "string",
 			"defaultValue": "@trigger().output.windowendtime"
@@ -74,30 +98,6 @@
 		"tumbling_window_trigger_properties_pipeline_parameters_pstartdate": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowstarttime"
-		},
-		"LS_SQL_databases_parameterization_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "chaithraserver.database.windows.net"
-		},
-		"LS_SQL_databases_parameterization_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "@{linkedService().db_name}"
-		},
-		"LS_SQL_databases_parameterization_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "chaithra"
-		},
-		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "chaithraserver.database.windows.net"
-		},
-		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "chaithradatabase"
-		},
-		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "chaithra"
 		},
 		"containerUri": {
 			"type": "string",
@@ -135,17 +135,26 @@
 					"LS_AzureBlobStorageOutput2_connectionString": {
 						"value": "[parameters('LS_AzureBlobStorageOutput2_connectionString')]"
 					},
+					"LS_AzureBlobStorage_parameterization_connectionString": {
+						"value": "[parameters('LS_AzureBlobStorage_parameterization_connectionString')]"
+					},
+					"LS_AzureSQLDatabase_parameterization_pipeline_password": {
+						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_password')]"
+					},
 					"LS_AzureSqlDatabase_Output_password": {
 						"value": "[parameters('LS_AzureSqlDatabase_Output_password')]"
 					},
 					"LS_AzureSqlDatabase_input_password": {
 						"value": "[parameters('LS_AzureSqlDatabase_input_password')]"
 					},
-					"LS_AzureSQLDatabase_parameterization_pipeline_password": {
-						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_password')]"
+					"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
+						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server')]"
 					},
-					"LS_AzureBlobStorage_parameterization_connectionString": {
-						"value": "[parameters('LS_AzureBlobStorage_parameterization_connectionString')]"
+					"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database": {
+						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database')]"
+					},
+					"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName": {
+						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName')]"
 					},
 					"LS_AzureSqlDatabase_Output_properties_typeProperties_server": {
 						"value": "[parameters('LS_AzureSqlDatabase_Output_properties_typeProperties_server')]"
@@ -173,15 +182,6 @@
 					},
 					"LS_SQL_databases_parameterization_properties_typeProperties_userName": {
 						"value": "[parameters('LS_SQL_databases_parameterization_properties_typeProperties_userName')]"
-					},
-					"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
-						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server')]"
-					},
-					"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database": {
-						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database')]"
-					},
-					"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName": {
-						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName')]"
 					}
 				}
 			},

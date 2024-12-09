@@ -19,6 +19,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorageOutput2'"
 		},
+		"LS_AzureBlobStorage_parameterization_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage_parameterization'"
+		},
+		"LS_AzureSQLDatabase_parameterization_pipeline_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_AzureSQLDatabase_parameterization_pipeline'"
+		},
 		"LS_AzureSqlDatabase_Output_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_AzureSqlDatabase_Output'"
@@ -27,13 +35,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_AzureSqlDatabase_input'"
 		},
-		"LS_AzureSQLDatabase_parameterization_pipeline_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'LS_AzureSQLDatabase_parameterization_pipeline'"
+		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "chaithraserver.database.windows.net"
 		},
-		"LS_AzureBlobStorage_parameterization_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage_parameterization'"
+		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "chaithradatabase"
+		},
+		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "chaithra"
 		},
 		"LS_AzureSqlDatabase_Output_properties_typeProperties_server": {
 			"type": "string",
@@ -68,18 +80,6 @@
 			"defaultValue": "@{linkedService().db_name}"
 		},
 		"LS_SQL_databases_parameterization_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "chaithra"
-		},
-		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "chaithraserver.database.windows.net"
-		},
-		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "chaithradatabase"
-		},
-		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "chaithra"
 		}
@@ -123,6 +123,41 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('LS_AzureBlobStorageOutput2_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_AzureBlobStorage_parameterization')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_AzureBlobStorage_parameterization_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_AzureSQLDatabase_parameterization_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server')]",
+					"database": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_password')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -194,41 +229,6 @@
 					"authenticationType": "SQL",
 					"userName": "[parameters('LS_SQL_databases_parameterization_properties_typeProperties_userName')]",
 					"password": "@{linkedService().password}"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_AzureSQLDatabase_parameterization_pipeline')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"server": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server')]",
-					"database": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database')]",
-					"encrypt": "mandatory",
-					"trustServerCertificate": false,
-					"authenticationType": "SQL",
-					"userName": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_password')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_AzureBlobStorage_parameterization')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('LS_AzureBlobStorage_parameterization_connectionString')]"
 				}
 			},
 			"dependsOn": []

@@ -308,6 +308,39 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_blob_pipeline_parameterization')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureBlobStorage_parameterization",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": {
+							"value": "@dataset().container_name",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_blob_src_emp1_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -384,6 +417,33 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_database_parameterization_pipeline_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureSQLDatabase_parameterization_pipeline",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"table_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "SalesLT",
+					"table": {
+						"value": "@dataset().table_name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_sql_tables_copy')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -417,62 +477,78 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_sql_database_parameterization_pipeline_src')]",
+			"name": "[concat(parameters('factoryName'), '/ds_blob_file_naming_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "LS_AzureSQLDatabase_parameterization_pipeline",
+					"referenceName": "LS_AzureBlobStorage1",
 					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"table_name": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "SalesLT",
-					"table": {
-						"value": "@dataset().table_name",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_blob_pipeline_parameterization')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_AzureBlobStorage_parameterization",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"container_name": {
-						"type": "string"
-					}
 				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"container": {
-							"value": "@dataset().container_name",
-							"type": "Expression"
-						}
+						"fileName": "emp_1.csv",
+						"container": "input"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "emp_id",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "salary",
+						"type": "String"
+					},
+					{
+						"name": "address",
+						"type": "String"
+					},
+					{
+						"name": "loc",
+						"type": "String"
+					},
+					{
+						"name": "email",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_blob_file_naming_json')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureBlobStorageOutput2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@convertTimeZone(utcNow(),'UTC','Indian Standard Time')",
+							"type": "Expression"
+						},
+						"container": "output"
+					}
+				},
+				"schema": {}
 			},
 			"dependsOn": []
 		},
@@ -823,13 +899,13 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline_tumbling_window_trigger')]",
+			"name": "[concat(parameters('factoryName'), '/pipeline_parameterization')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "tumbling_window",
+						"name": "parameterizing_pipeline",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -839,32 +915,10 @@
 							"secureOutput": false,
 							"secureInput": false
 						},
-						"userProperties": [
-							{
-								"name": "Destination",
-								"value": "output//"
-							}
-						],
+						"userProperties": [],
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[dbo].[cust_sale]",
-								"storedProcedureParameters": {
-									"enddate": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.penddate",
-											"type": "Expression"
-										}
-									},
-									"startdate": {
-										"type": "String",
-										"value": {
-											"value": "@pipeline().parameters.pstartdate",
-											"type": "Expression"
-										}
-									}
-								},
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -891,16 +945,26 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "ds_azure_sql_src",
+								"referenceName": "ds_sql_database_parameterization_pipeline_src",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"table_name": {
+										"value": "@pipeline().parameters.table_name",
+										"type": "Expression"
+									}
+								}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "ds_blob_tumbling_window_sink",
+								"referenceName": "ds_blob_pipeline_parameterization",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"container_name": {
+										"value": "@pipeline().parameters.container_name",
+										"type": "Expression"
+									}
+								}
 							}
 						]
 					}
@@ -909,140 +973,19 @@
 					"elapsedTimeMetric": {}
 				},
 				"parameters": {
-					"penddate": {
+					"table_name": {
 						"type": "string"
 					},
-					"pstartdate": {
+					"container_name": {
 						"type": "string"
 					}
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_blob_tumbling_window_sink')]"
+				"[concat(variables('factoryId'), '/datasets/ds_sql_database_parameterization_pipeline_src')]",
+				"[concat(variables('factoryId'), '/datasets/ds_blob_pipeline_parameterization')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_azure_sql_customer_src",
-								"type": "DatasetReference"
-							},
-							"name": "dataflow"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_blob_dataflow_sink",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "filter1"
-						},
-						{
-							"name": "sort1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          CustomerID as integer,",
-						"          NameStyle as boolean,",
-						"          Title as string,",
-						"          FirstName as string,",
-						"          MiddleName as string,",
-						"          LastName as string,",
-						"          Suffix as string,",
-						"          CompanyName as string,",
-						"          SalesPerson as string,",
-						"          EmailAddress as string,",
-						"          Phone as string,",
-						"          PasswordHash as string,",
-						"          PasswordSalt as string,",
-						"          rowguid as string,",
-						"          ModifiedDate as timestamp",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> dataflow",
-						"dataflow filter(Title=='Mr.') ~> filter1",
-						"filter1 sort(asc(FirstName, true),",
-						"     caseInsensitive: true) ~> sort1",
-						"sort1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow_aggregate_transformation')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_aggregate_transformation_src",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_blob_aggregate_transformation_sink",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "aggregate1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          emp_id as string,",
-						"          name as string,",
-						"          salary as integer,",
-						"          address as string,",
-						"          loc as string,",
-						"          email as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 aggregate(groupBy(address),",
-						"     emp_id = countDistinct(emp_id),",
-						"          tot_salary = sum(salary),",
-						"          max_salary = max(salary)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
 		}
 	]
 }

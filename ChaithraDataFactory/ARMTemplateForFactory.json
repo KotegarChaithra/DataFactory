@@ -19,6 +19,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorageOutput2'"
 		},
+		"LS_AzureBlobStorage_parameterization_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage_parameterization'"
+		},
+		"LS_AzureSQLDatabase_parameterization_pipeline_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_AzureSQLDatabase_parameterization_pipeline'"
+		},
 		"LS_AzureSqlDatabase_Output_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_AzureSqlDatabase_Output'"
@@ -27,13 +35,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_AzureSqlDatabase_input'"
 		},
-		"LS_AzureSQLDatabase_parameterization_pipeline_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'LS_AzureSQLDatabase_parameterization_pipeline'"
+		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "chaithraserver.database.windows.net"
 		},
-		"LS_AzureBlobStorage_parameterization_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage_parameterization'"
+		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "chaithradatabase"
+		},
+		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "chaithra"
 		},
 		"LS_AzureSqlDatabase_Output_properties_typeProperties_server": {
 			"type": "string",
@@ -59,6 +71,18 @@
 			"type": "string",
 			"defaultValue": "chaithra"
 		},
+		"LS_SQL_databases_parameterization_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "chaithraserver.database.windows.net"
+		},
+		"LS_SQL_databases_parameterization_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "@{linkedService().db_name}"
+		},
+		"LS_SQL_databases_parameterization_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "chaithra"
+		},
 		"tumbling_window_properties_pipeline_parameters_penddate": {
 			"type": "string",
 			"defaultValue": "@trigger().output.windowendtime"
@@ -74,30 +98,6 @@
 		"tumbling_window_trigger_properties_pipeline_parameters_pstartdate": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowstarttime"
-		},
-		"LS_SQL_databases_parameterization_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "chaithraserver.database.windows.net"
-		},
-		"LS_SQL_databases_parameterization_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "@{linkedService().db_name}"
-		},
-		"LS_SQL_databases_parameterization_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "chaithra"
-		},
-		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "chaithraserver.database.windows.net"
-		},
-		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "chaithradatabase"
-		},
-		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "chaithra"
 		}
 	},
 	"variables": {
@@ -638,6 +638,95 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/dataflow_derived_transformation')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_parameterization')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "parameterizing_pipeline",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_sql_database_parameterization_pipeline_src",
+								"type": "DatasetReference",
+								"parameters": {
+									"table_name": {
+										"value": "@pipeline().parameters.table_name",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_blob_pipeline_parameterization",
+								"type": "DatasetReference",
+								"parameters": {
+									"container_name": {
+										"value": "@pipeline().parameters.container_name",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"table_name": {
+						"type": "string"
+					},
+					"container_name": {
+						"type": "string"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_sql_database_parameterization_pipeline_src')]",
+				"[concat(variables('factoryId'), '/datasets/ds_blob_pipeline_parameterization')]"
 			]
 		},
 		{
@@ -1645,6 +1734,41 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_blob_pipeline_parameterization')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureBlobStorage_parameterization",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"container_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": {
+							"value": "@dataset().container_name",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_AzureBlobStorage_parameterization')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_blob_src_emp1_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1725,6 +1849,70 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_database_parameterization_pipeline_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureSQLDatabase_parameterization_pipeline",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"table_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "SalesLT",
+					"table": {
+						"value": "@dataset().table_name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_AzureSQLDatabase_parameterization_pipeline')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_tables_copy')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureSqlDatabase_input",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"table_name": {
+						"type": "string"
+					},
+					"db": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().db",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().table_name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_AzureSqlDatabase_input')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1759,6 +1947,41 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('LS_AzureBlobStorageOutput2_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_AzureBlobStorage_parameterization')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_AzureBlobStorage_parameterization_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_AzureSQLDatabase_parameterization_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server')]",
+					"database": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_password')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -1803,6 +2026,33 @@
 						"type": "SecureString",
 						"value": "[parameters('LS_AzureSqlDatabase_input_password')]"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_SQL_databases_parameterization')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"db_name": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('LS_SQL_databases_parameterization_properties_typeProperties_server')]",
+					"database": "[parameters('LS_SQL_databases_parameterization_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('LS_SQL_databases_parameterization_properties_typeProperties_userName')]",
+					"password": "@{linkedService().password}"
 				}
 			},
 			"dependsOn": []
@@ -2287,75 +2537,13 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_sql_tables_copy')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_AzureSqlDatabase_input",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"table_name": {
-						"type": "string"
-					},
-					"db": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().db",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().table_name",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_AzureSqlDatabase_input')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_SQL_databases_parameterization')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"parameters": {
-					"db_name": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"server": "[parameters('LS_SQL_databases_parameterization_properties_typeProperties_server')]",
-					"database": "[parameters('LS_SQL_databases_parameterization_properties_typeProperties_database')]",
-					"encrypt": "mandatory",
-					"trustServerCertificate": false,
-					"authenticationType": "SQL",
-					"userName": "[parameters('LS_SQL_databases_parameterization_properties_typeProperties_userName')]",
-					"password": "@{linkedService().password}"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline_parameterization')]",
+			"name": "[concat(parameters('factoryName'), '/pipeline_file_naming')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "parameterizing_pipeline",
+						"name": "file naming",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -2368,53 +2556,39 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
 							},
 							"sink": {
-								"type": "DelimitedTextSink",
+								"type": "JsonSink",
 								"storeSettings": {
 									"type": "AzureBlobStorageWriteSettings"
 								},
 								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
+									"type": "JsonWriteSettings"
 								}
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
+							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "ds_sql_database_parameterization_pipeline_src",
+								"referenceName": "ds_blob_file_naming_csv",
 								"type": "DatasetReference",
-								"parameters": {
-									"table_name": {
-										"value": "@pipeline().parameters.table_name",
-										"type": "Expression"
-									}
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "ds_blob_pipeline_parameterization",
+								"referenceName": "ds_blob_file_naming_json",
 								"type": "DatasetReference",
-								"parameters": {
-									"container_name": {
-										"value": "@pipeline().parameters.container_name",
-										"type": "Expression"
-									}
-								}
+								"parameters": {}
 							}
 						]
 					}
@@ -2422,118 +2596,91 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
-				"parameters": {
-					"table_name": {
-						"type": "string"
-					},
-					"container_name": {
-						"type": "string"
-					}
-				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_sql_database_parameterization_pipeline_src')]",
-				"[concat(variables('factoryId'), '/datasets/ds_blob_pipeline_parameterization')]"
+				"[concat(variables('factoryId'), '/datasets/ds_blob_file_naming_csv')]",
+				"[concat(variables('factoryId'), '/datasets/ds_blob_file_naming_json')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/LS_AzureSQLDatabase_parameterization_pipeline')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"server": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server')]",
-					"database": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_database')]",
-					"encrypt": "mandatory",
-					"trustServerCertificate": false,
-					"authenticationType": "SQL",
-					"userName": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_password')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_sql_database_parameterization_pipeline_src')]",
+			"name": "[concat(parameters('factoryName'), '/ds_blob_file_naming_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "LS_AzureSQLDatabase_parameterization_pipeline",
+					"referenceName": "LS_AzureBlobStorage1",
 					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"table_name": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "SalesLT",
-					"table": {
-						"value": "@dataset().table_name",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_AzureSQLDatabase_parameterization_pipeline')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_AzureBlobStorage_parameterization')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('LS_AzureBlobStorage_parameterization_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_blob_pipeline_parameterization')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_AzureBlobStorage_parameterization",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"container_name": {
-						"type": "string"
-					}
 				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"container": {
-							"value": "@dataset().container_name",
-							"type": "Expression"
-						}
+						"fileName": "emp_1.csv",
+						"container": "input"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "emp_id",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "salary",
+						"type": "String"
+					},
+					{
+						"name": "address",
+						"type": "String"
+					},
+					{
+						"name": "loc",
+						"type": "String"
+					},
+					{
+						"name": "email",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_AzureBlobStorage_parameterization')]"
+				"[concat(variables('factoryId'), '/linkedServices/LS_AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_blob_file_naming_json')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureBlobStorageOutput2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@convertTimeZone(utcNow(),'UTC','Indian Standard Time')",
+							"type": "Expression"
+						},
+						"container": "output"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_AzureBlobStorageOutput2')]"
 			]
 		}
 	]
