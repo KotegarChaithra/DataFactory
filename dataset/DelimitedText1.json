@@ -9,7 +9,9 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation"
+				"type": "AzureBlobStorageLocation",
+				"fileName": "person.csv",
+				"container": "person"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
