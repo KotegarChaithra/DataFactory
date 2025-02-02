@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "pipeline_incremental_load_demo",
 	"properties": {
 		"activities": [
 			{
