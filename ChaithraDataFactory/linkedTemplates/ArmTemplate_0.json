@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"AzureBlobStorage2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage2'"
+		},
 		"LS_AzureBlobStorage1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage1'"
@@ -31,17 +35,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_AzureSqlDatabase_Output'"
 		},
-		"LS_AzureSqlDatabase_input_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'LS_AzureSqlDatabase_input'"
-		},
 		"LS_AzureSqlDatabase_final_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_AzureSqlDatabase_final'"
 		},
-		"AzureBlobStorage2_connectionString": {
+		"LS_AzureSqlDatabase_input_password": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage2'"
+			"metadata": "Secure string for 'password' of 'LS_AzureSqlDatabase_input'"
+		},
+		"LS_AzureDataLakeStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LS_AzureDataLakeStorage'"
 		},
 		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
 			"type": "string",
@@ -64,6 +68,18 @@
 			"defaultValue": "chaithradatabase"
 		},
 		"LS_AzureSqlDatabase_Output_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "chaithra"
+		},
+		"LS_AzureSqlDatabase_final_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "chaithraserver.database.windows.net"
+		},
+		"LS_AzureSqlDatabase_final_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "chaithradatabase"
+		},
+		"LS_AzureSqlDatabase_final_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "chaithra"
 		},
@@ -91,17 +107,13 @@
 			"type": "string",
 			"defaultValue": "chaithra"
 		},
-		"LS_AzureSqlDatabase_final_properties_typeProperties_server": {
+		"LS_HttpServer_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "chaithraserver.database.windows.net"
+			"defaultValue": "https://raw.githubusercontent.com/"
 		},
-		"LS_AzureSqlDatabase_final_properties_typeProperties_database": {
+		"LS_AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "chaithradatabase"
-		},
-		"LS_AzureSqlDatabase_final_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "chaithra"
+			"defaultValue": "https://awstoragechaithra.dfs.core.windows.net/"
 		}
 	},
 	"variables": {
@@ -117,6 +129,19 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage2_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -205,6 +230,28 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/LS_AzureSqlDatabase_final')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('LS_AzureSqlDatabase_final_properties_typeProperties_server')]",
+					"database": "[parameters('LS_AzureSqlDatabase_final_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('LS_AzureSqlDatabase_final_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('LS_AzureSqlDatabase_final_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/LS_AzureSqlDatabase_input')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -254,39 +301,107 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/LS_AzureSqlDatabase_final')]",
+			"name": "[concat(parameters('factoryName'), '/LS_HttpServer')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "AzureSqlDatabase",
+				"type": "HttpServer",
 				"typeProperties": {
-					"server": "[parameters('LS_AzureSqlDatabase_final_properties_typeProperties_server')]",
-					"database": "[parameters('LS_AzureSqlDatabase_final_properties_typeProperties_database')]",
-					"encrypt": "mandatory",
-					"trustServerCertificate": false,
-					"authenticationType": "SQL",
-					"userName": "[parameters('LS_AzureSqlDatabase_final_properties_typeProperties_userName')]",
-					"password": {
+					"url": "[parameters('LS_HttpServer_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_AzureDataLakeStorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('LS_AzureDataLakeStorage_properties_typeProperties_url')]",
+					"accountKey": {
 						"type": "SecureString",
-						"value": "[parameters('LS_AzureSqlDatabase_final_password')]"
+						"value": "[parameters('LS_AzureDataLakeStorage_accountKey')]"
 					}
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage2')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureSqlDatabase_final",
+					"type": "LinkedServiceReference"
+				},
 				"annotations": [],
-				"type": "AzureBlobStorage",
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "PersonId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FirstName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MiddleInitial",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "data_date",
+						"type": "date"
+					}
+				],
 				"typeProperties": {
-					"connectionString": "[parameters('AzureBlobStorage2_connectionString')]"
+					"schema": "dbo",
+					"table": "person"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_AzureSqlDatabase_final')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "person.csv",
+						"container": "person"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage2')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ds_aggregate_transformation_src')]",
@@ -544,142 +659,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_blob_dataflow_sink')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "dataflowoutput"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_blob_delete_activity_src')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "emp_1.csv",
-						"container": "input-data"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_blob_delhi_csv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_AzureBlobStorageOutput2",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "delhi_csv.csv",
-						"container": "delhi"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "month ",
-						"type": "String"
-					},
-					{
-						"name": "sales",
-						"type": "String"
-					},
-					{
-						"name": "profit",
-						"type": "String"
-					},
-					{
-						"name": "location",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_AzureBlobStorageOutput2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_blob_department_csv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "department.csv",
-						"container": "department"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "user",
-						"type": "String"
-					},
-					{
-						"name": "department",
-						"type": "String"
-					},
-					{
-						"name": "designation",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
 			]
 		}
 	]

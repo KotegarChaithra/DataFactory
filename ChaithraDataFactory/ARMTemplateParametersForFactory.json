@@ -8,6 +8,9 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"AzureBlobStorage2_connectionString": {
+			"value": ""
+		},
 		"LS_AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
@@ -23,13 +26,13 @@
 		"LS_AzureSqlDatabase_Output_password": {
 			"value": ""
 		},
-		"LS_AzureSqlDatabase_input_password": {
-			"value": ""
-		},
 		"LS_AzureSqlDatabase_final_password": {
 			"value": ""
 		},
-		"AzureBlobStorage2_connectionString": {
+		"LS_AzureSqlDatabase_input_password": {
+			"value": ""
+		},
+		"LS_AzureDataLakeStorage_accountKey": {
 			"value": ""
 		},
 		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
@@ -48,6 +51,15 @@
 			"value": "chaithradatabase"
 		},
 		"LS_AzureSqlDatabase_Output_properties_typeProperties_userName": {
+			"value": "chaithra"
+		},
+		"LS_AzureSqlDatabase_final_properties_typeProperties_server": {
+			"value": "chaithraserver.database.windows.net"
+		},
+		"LS_AzureSqlDatabase_final_properties_typeProperties_database": {
+			"value": "chaithradatabase"
+		},
+		"LS_AzureSqlDatabase_final_properties_typeProperties_userName": {
 			"value": "chaithra"
 		},
 		"LS_AzureSqlDatabase_input_properties_typeProperties_server": {
@@ -80,14 +92,11 @@
 		"tumbling_window_trigger_properties_pipeline_parameters_pstartdate": {
 			"value": "@trigger().outputs.windowstarttime"
 		},
-		"LS_AzureSqlDatabase_final_properties_typeProperties_server": {
-			"value": "chaithraserver.database.windows.net"
+		"LS_HttpServer_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/"
 		},
-		"LS_AzureSqlDatabase_final_properties_typeProperties_database": {
-			"value": "chaithradatabase"
-		},
-		"LS_AzureSqlDatabase_final_properties_typeProperties_userName": {
-			"value": "chaithra"
+		"LS_AzureDataLakeStorage_properties_typeProperties_url": {
+			"value": "https://awstoragechaithra.dfs.core.windows.net/"
 		}
 	}
 }
