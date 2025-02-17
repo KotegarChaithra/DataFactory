@@ -1,0 +1,24 @@
+{
+	"name": "Trigger_wo7",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "test_metadatadriven_task_wo7_TopLevel",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2025-02-17T04:00:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
