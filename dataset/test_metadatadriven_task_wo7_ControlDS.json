@@ -1,0 +1,19 @@
+{
+	"name": "test_metadatadriven_task_wo7_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureSqlDatabase_input",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "test_metadatadriven_task_wo7_20250217"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "MainControlTable_wo7"
+		}
+	}
+}
