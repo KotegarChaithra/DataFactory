@@ -1,0 +1,19 @@
+{
+	"name": "MetadataDrivenCopyTask_8bf_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqldatabase",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenCopyTask_8bf_20250218"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "MainControlTable_8bf"
+		}
+	}
+}
