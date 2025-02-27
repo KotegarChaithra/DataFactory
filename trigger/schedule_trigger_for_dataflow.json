@@ -1,0 +1,25 @@
+{
+	"name": "schedule_trigger_for_dataflow",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline_foreach_activity",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2025-02-27T11:23:00",
+				"endTime": "2025-02-28T11:28:00",
+				"timeZone": "India Standard Time"
+			}
+		}
+	}
+}
