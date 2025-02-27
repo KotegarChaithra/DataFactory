@@ -22,6 +22,12 @@
 				},
 				{
 					"name": "filter1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "filter2"
 				}
 			],
 			"scriptLines": [
@@ -52,7 +58,9 @@
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 split(Sex==\"Male\",",
 				"     disjoint: false) ~> split1@(Male, Female)",
-				"split1@Male filter(Index==3) ~> filter1"
+				"split1@Male filter(Index!=3) ~> filter1",
+				"filter1 derive(Age = minus(year(currentDate()),year(DOB))) ~> derivedColumn1",
+				"derivedColumn1 filter((Age>=60) && (Age<=90)) ~> filter2"
 			]
 		}
 	}
