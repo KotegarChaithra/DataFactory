@@ -1,0 +1,70 @@
+{
+	"name": "dataflow3",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_people_csv_dataset_source",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "split1"
+				},
+				{
+					"name": "cast1"
+				},
+				{
+					"name": "filter1"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     Age as string (minus(currentDate(),{Date of birth}))",
+				"}",
+				"source(output(",
+				"          Index as string,",
+				"          {User Id} as string,",
+				"          {First Name} as string,",
+				"          {Last Name} as string,",
+				"          Sex as string,",
+				"          Email as string,",
+				"          Phone as string,",
+				"          {Date of birth} as string,",
+				"          {Job Title} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 select(mapColumn(",
+				"          Index,",
+				"          {User Id},",
+				"          {First Name},",
+				"          {Last Name},",
+				"          Sex,",
+				"          Email,",
+				"          {Date of birth},",
+				"          {Job Title}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 split(Sex==\"Male\",",
+				"     disjoint: false) ~> split1@(Male, Female)",
+				"split1@Male cast(output(",
+				"          {Date of birth} as date 'yyyy-MM-dd'",
+				"     ),",
+				"     errors: true) ~> cast1",
+				"cast1 filter({User Id}==3) ~> filter1"
+			]
+		}
+	}
+}
