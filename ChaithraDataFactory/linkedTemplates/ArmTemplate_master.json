@@ -163,6 +163,10 @@
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowstarttime"
 		},
+		"trigger1_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/49ed02b0-f73b-41f1-85f2-5513631de887/resourceGroups/AWPROJECT/providers/Microsoft.Storage/storageAccounts/awstoragechaithra"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -404,11 +408,34 @@
 					},
 					"tumbling_window_trigger_properties_pipeline_parameters_pstartdate": {
 						"value": "[parameters('tumbling_window_trigger_properties_pipeline_parameters_pstartdate')]"
+					},
+					"trigger1_properties_typeProperties_scope": {
+						"value": "[parameters('trigger1_properties_typeProperties_scope')]"
 					}
 				}
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ChaithraDataFactory_ArmTemplate_4')]"
+			]
+		},
+		{
+			"name": "ChaithraDataFactory_ArmTemplate_6",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_6.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ChaithraDataFactory_ArmTemplate_5')]"
 			]
 		}
 	]

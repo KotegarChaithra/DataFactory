@@ -121,6 +121,9 @@
 		},
 		"tumbling_window_trigger_properties_pipeline_parameters_pstartdate": {
 			"value": "@trigger().outputs.windowstarttime"
+		},
+		"trigger1_properties_typeProperties_scope": {
+			"value": "/subscriptions/49ed02b0-f73b-41f1-85f2-5513631de887/resourceGroups/AWPROJECT/providers/Microsoft.Storage/storageAccounts/awstoragechaithra"
 		}
 	}
 }
