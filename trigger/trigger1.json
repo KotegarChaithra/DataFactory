@@ -1,0 +1,24 @@
+{
+	"name": "trigger1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline_storage_event_trigger",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/source/blobs/csvfiles/",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/49ed02b0-f73b-41f1-85f2-5513631de887/resourceGroups/AWPROJECT/providers/Microsoft.Storage/storageAccounts/awstoragechaithra",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
