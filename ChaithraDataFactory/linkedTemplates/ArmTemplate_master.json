@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage2'"
 		},
+		"AzureDatabricks1_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
+		},
 		"LS_AzureBlobStorage1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage1'"
@@ -26,6 +30,10 @@
 		"LS_AzureBlobStorage_parameterization_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_AzureBlobStorage_parameterization'"
+		},
+		"LS_AzureDataLakeStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LS_AzureDataLakeStorage'"
 		},
 		"LS_AzureSQLDatabase_parameterization_pipeline_password": {
 			"type": "secureString",
@@ -43,9 +51,21 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_AzureSqlDatabase_input'"
 		},
-		"LS_AzureDataLakeStorage_accountKey": {
+		"LS_aws_storage_account_accountKey": {
 			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'LS_AzureDataLakeStorage'"
+			"metadata": "Secure string for 'accountKey' of 'LS_aws_storage_account'"
+		},
+		"ls_sqldatabase_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_sqldatabase'"
+		},
+		"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0206-051627-4ury7c7u"
+		},
+		"LS_AzureDataLakeStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://awstoragechaithra.dfs.core.windows.net/"
 		},
 		"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
 			"type": "string",
@@ -95,6 +115,10 @@
 			"type": "string",
 			"defaultValue": "chaithra"
 		},
+		"LS_HttpServer_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://raw.githubusercontent.com/"
+		},
 		"LS_SQL_databases_parameterization_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "chaithraserver.database.windows.net"
@@ -104,6 +128,22 @@
 			"defaultValue": "@{linkedService().db_name}"
 		},
 		"LS_SQL_databases_parameterization_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "chaithra"
+		},
+		"LS_aws_storage_account_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://awstoragechaithra.dfs.core.windows.net/"
+		},
+		"ls_sqldatabase_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "server-chaithra.database.windows.net"
+		},
+		"ls_sqldatabase_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sql-database"
+		},
+		"ls_sqldatabase_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "chaithra"
 		},
@@ -122,14 +162,6 @@
 		"tumbling_window_trigger_properties_pipeline_parameters_pstartdate": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowstarttime"
-		},
-		"LS_HttpServer_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://raw.githubusercontent.com/"
-		},
-		"LS_AzureDataLakeStorage_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://awstoragechaithra.dfs.core.windows.net/"
 		},
 		"containerUri": {
 			"type": "string",
@@ -164,6 +196,9 @@
 					"AzureBlobStorage2_connectionString": {
 						"value": "[parameters('AzureBlobStorage2_connectionString')]"
 					},
+					"AzureDatabricks1_accessToken": {
+						"value": "[parameters('AzureDatabricks1_accessToken')]"
+					},
 					"LS_AzureBlobStorage1_connectionString": {
 						"value": "[parameters('LS_AzureBlobStorage1_connectionString')]"
 					},
@@ -172,6 +207,9 @@
 					},
 					"LS_AzureBlobStorage_parameterization_connectionString": {
 						"value": "[parameters('LS_AzureBlobStorage_parameterization_connectionString')]"
+					},
+					"LS_AzureDataLakeStorage_accountKey": {
+						"value": "[parameters('LS_AzureDataLakeStorage_accountKey')]"
 					},
 					"LS_AzureSQLDatabase_parameterization_pipeline_password": {
 						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_password')]"
@@ -185,8 +223,17 @@
 					"LS_AzureSqlDatabase_input_password": {
 						"value": "[parameters('LS_AzureSqlDatabase_input_password')]"
 					},
-					"LS_AzureDataLakeStorage_accountKey": {
-						"value": "[parameters('LS_AzureDataLakeStorage_accountKey')]"
+					"LS_aws_storage_account_accountKey": {
+						"value": "[parameters('LS_aws_storage_account_accountKey')]"
+					},
+					"ls_sqldatabase_password": {
+						"value": "[parameters('ls_sqldatabase_password')]"
+					},
+					"AzureDatabricks1_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('AzureDatabricks1_properties_typeProperties_existingClusterId')]"
+					},
+					"LS_AzureDataLakeStorage_properties_typeProperties_url": {
+						"value": "[parameters('LS_AzureDataLakeStorage_properties_typeProperties_url')]"
 					},
 					"LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server": {
 						"value": "[parameters('LS_AzureSQLDatabase_parameterization_pipeline_properties_typeProperties_server')]"
@@ -224,6 +271,9 @@
 					"LS_AzureSqlDatabase_input_properties_typeProperties_userName": {
 						"value": "[parameters('LS_AzureSqlDatabase_input_properties_typeProperties_userName')]"
 					},
+					"LS_HttpServer_properties_typeProperties_url": {
+						"value": "[parameters('LS_HttpServer_properties_typeProperties_url')]"
+					},
 					"LS_SQL_databases_parameterization_properties_typeProperties_server": {
 						"value": "[parameters('LS_SQL_databases_parameterization_properties_typeProperties_server')]"
 					},
@@ -233,11 +283,17 @@
 					"LS_SQL_databases_parameterization_properties_typeProperties_userName": {
 						"value": "[parameters('LS_SQL_databases_parameterization_properties_typeProperties_userName')]"
 					},
-					"LS_HttpServer_properties_typeProperties_url": {
-						"value": "[parameters('LS_HttpServer_properties_typeProperties_url')]"
+					"LS_aws_storage_account_properties_typeProperties_url": {
+						"value": "[parameters('LS_aws_storage_account_properties_typeProperties_url')]"
 					},
-					"LS_AzureDataLakeStorage_properties_typeProperties_url": {
-						"value": "[parameters('LS_AzureDataLakeStorage_properties_typeProperties_url')]"
+					"ls_sqldatabase_properties_typeProperties_server": {
+						"value": "[parameters('ls_sqldatabase_properties_typeProperties_server')]"
+					},
+					"ls_sqldatabase_properties_typeProperties_database": {
+						"value": "[parameters('ls_sqldatabase_properties_typeProperties_database')]"
+					},
+					"ls_sqldatabase_properties_typeProperties_userName": {
+						"value": "[parameters('ls_sqldatabase_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -296,6 +352,46 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ChaithraDataFactory_ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "ChaithraDataFactory_ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ChaithraDataFactory_ArmTemplate_3')]"
+			]
+		},
+		{
+			"name": "ChaithraDataFactory_ArmTemplate_5",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"tumbling_window_properties_pipeline_parameters_penddate": {
 						"value": "[parameters('tumbling_window_properties_pipeline_parameters_penddate')]"
@@ -312,7 +408,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ChaithraDataFactory_ArmTemplate_2')]"
+				"[resourceId('Microsoft.Resources/deployments', 'ChaithraDataFactory_ArmTemplate_4')]"
 			]
 		}
 	]
