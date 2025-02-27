@@ -21,25 +21,19 @@
 					"name": "split1"
 				},
 				{
-					"name": "cast1"
-				},
-				{
 					"name": "filter1"
 				}
 			],
 			"scriptLines": [
-				"parameters{",
-				"     Age as string (minus(currentDate(),{Date of birth}))",
-				"}",
 				"source(output(",
-				"          Index as string,",
-				"          {User Id} as string,",
+				"          Index as integer,",
+				"          {User Id} as integer,",
 				"          {First Name} as string,",
 				"          {Last Name} as string,",
 				"          Sex as string,",
 				"          Email as string,",
 				"          Phone as string,",
-				"          {Date of birth} as string,",
+				"          {Date of birth} as date,",
 				"          {Job Title} as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
@@ -47,23 +41,18 @@
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 select(mapColumn(",
 				"          Index,",
-				"          {User Id},",
-				"          {First Name},",
-				"          {Last Name},",
+				"          First_Name = {First Name},",
+				"          Last_Name = {Last Name},",
 				"          Sex,",
 				"          Email,",
-				"          {Date of birth},",
+				"          DOB = {Date of birth},",
 				"          {Job Title}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 split(Sex==\"Male\",",
 				"     disjoint: false) ~> split1@(Male, Female)",
-				"split1@Male cast(output(",
-				"          {Date of birth} as date 'yyyy-MM-dd'",
-				"     ),",
-				"     errors: true) ~> cast1",
-				"cast1 filter({User Id}==3) ~> filter1"
+				"split1@Male filter(Index==3) ~> filter1"
 			]
 		}
 	}
