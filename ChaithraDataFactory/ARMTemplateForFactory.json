@@ -7381,7 +7381,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipeline": {
 					"pipelineReference": {
 						"referenceName": "pipeline_tumbling_window_trigger",
@@ -7416,7 +7416,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipeline": {
 					"pipelineReference": {
 						"referenceName": "pipeline_tumbling_window_trigger",
@@ -8117,9 +8117,9 @@
 					"recurrence": {
 						"frequency": "Minute",
 						"interval": 15,
-						"startTime": "2025-02-27T11:23:00",
-						"endTime": "2025-02-28T11:28:00",
-						"timeZone": "India Standard Time"
+						"startTime": "2025-02-27T11:30:00",
+						"endTime": "2025-02-27T11:35:00",
+						"timeZone": "Atlantic Standard Time"
 					}
 				}
 			},
