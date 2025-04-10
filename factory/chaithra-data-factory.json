@@ -1,0 +1,9 @@
+{
+	"name": "chaithra-data-factory",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "35e29cb4-4456-4494-b510-b25b8caa11fb",
+		"tenantId": "441cd19f-c2cc-4ae1-8c8a-de21814ead57"
+	}
+}
